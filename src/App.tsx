@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import { fabric } from 'fabric'
 import { Canvas } from 'fabric/fabric-impl'
-import { Container, Box, Stack, Slider } from '@mui/material'
+import { Container, Button, Stack, Slider } from '@mui/material'
 
 function App() {
 	const [brushwidth, setBrushWidth] = useState(25)
 	const [fabricCanvas, setFabricCanvas] = useState<Canvas>()
+	const backgroundImageUrl = 'https://placehold.jp/300x300.png'
 
 	useEffect(() => {
 		// キャンバスの初期化処理
@@ -15,7 +16,7 @@ function App() {
 			width: 300,
 			height: 300,
 			// backgroundColor: '#80beaf',
-			backgroundImage: 'https://placehold.jp/300x300.png',
+			backgroundImage: backgroundImageUrl,
 		})
 		setFabricCanvas(canvas)
 	}, [])
@@ -25,12 +26,30 @@ function App() {
 			fabricCanvas.freeDrawingBrush.width = brushwidth
 	}, [fabricCanvas, brushwidth])
 
+	const clearCanvas = () => {
+		if (fabricCanvas !== undefined) {
+			fabricCanvas.clear()
+			fabricCanvas.setBackgroundImage(backgroundImageUrl, () =>
+				fabricCanvas.renderAll()
+			)
+		}
+	}
+
 	return (
 		<Container>
-			<canvas id="fabric" />
-			<Box sx={{ width: 500, margin: 'auto' }}>
+			<div style={{ margin: '40px auto' }}>
+				<canvas id="fabric" />
+			</div>
+			<Stack spacing={2} sx={{ width: 500, margin: 'auto' }}>
+				<Button
+					variant="contained"
+					onClick={clearCanvas}
+					style={{ width: 'fit-content' }}
+				>
+					クリア
+				</Button>
 				<Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
-					<p>BrushWidth: </p>
+					<p> BrushWidth: </p>
 					<Slider
 						defaultValue={25}
 						aria-label="Default"
@@ -40,7 +59,7 @@ function App() {
 						onChange={(event, value) => setBrushWidth(value as number)}
 					/>
 				</Stack>
-			</Box>
+			</Stack>
 		</Container>
 	)
 }
