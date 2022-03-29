@@ -1,26 +1,47 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import './App.css'
 import { fabric } from 'fabric'
-import Button from '@mui/material/Button'
+import { Canvas } from 'fabric/fabric-impl'
+import { Container, Box, Stack, Slider } from '@mui/material'
 
 function App() {
+	const [brushwidth, setBrushWidth] = useState(25)
+	const [fabricCanvas, setFabricCanvas] = useState<Canvas>()
+
 	useEffect(() => {
 		// キャンバスの初期化処理
-		new fabric.Canvas('fabric', {
+		const canvas = new fabric.Canvas('fabric', {
 			isDrawingMode: true, // 手書きモード
 			width: 300,
 			height: 300,
 			// backgroundColor: '#80beaf',
 			backgroundImage: 'https://placehold.jp/300x300.png',
 		})
+		setFabricCanvas(canvas)
 	}, [])
 
+	useEffect(() => {
+		if (fabricCanvas !== undefined)
+			fabricCanvas.freeDrawingBrush.width = brushwidth
+	}, [fabricCanvas, brushwidth])
+
 	return (
-		<>
+		<Container>
 			<canvas id="fabric" />
-			<Button variant="contained" href="https://reactjs.org" target="_blank">
-				Learn React
-			</Button>
-		</>
+			<Box sx={{ width: 500, margin: 'auto' }}>
+				<Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
+					<p>BrushWidth: </p>
+					<Slider
+						defaultValue={25}
+						aria-label="Default"
+						valueLabelDisplay="auto"
+						min={1}
+						max={50}
+						onChange={(event, value) => setBrushWidth(value as number)}
+					/>
+				</Stack>
+			</Box>
+		</Container>
 	)
 }
 
