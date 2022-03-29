@@ -1,21 +1,26 @@
-import React from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { useEffect } from 'react'
+import { fabric } from 'fabric'
 import Button from '@mui/material/Button'
 
 function App() {
+	useEffect(() => {
+		// キャンバスの初期化処理
+		new fabric.Canvas('fabric', {
+			isDrawingMode: true, // 手書きモード
+			width: 300,
+			height: 300,
+			// backgroundColor: '#80beaf',
+			backgroundImage: 'https://placehold.jp/300x300.png',
+		})
+	}, [])
+
 	return (
-		<div className="App">
-			<header className="App-header">
-				<img src={logo} className="App-logo" alt="logo" />
-				<p>
-					Edit <code>src/App.tsx</code> and save to reload.
-				</p>
-				<Button variant="contained" href="https://reactjs.org" target="_blank">
-					Learn React
-				</Button>
-			</header>
-		</div>
+		<>
+			<canvas id="fabric" />
+			<Button variant="contained" href="https://reactjs.org" target="_blank">
+				Learn React
+			</Button>
+		</>
 	)
 }
 
