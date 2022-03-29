@@ -1,16 +1,19 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import './App.css'
 import { fabric } from 'fabric'
 import { Canvas } from 'fabric/fabric-impl'
 import { Container, Button, Stack, Slider } from '@mui/material'
 
+let isRedoing: boolean = false
+let canvasHistory: fabric.Object[] = []
+
 function App() {
-	const [brushwidth, setBrushWidth] = useState(25)
+	const [brushwidth, setBrushWidth] = useState<number>(25)
 	const [fabricCanvas, setFabricCanvas] = useState<Canvas>()
 	const backgroundImageUrl = 'https://placehold.jp/300x300.png'
 
-	useEffect(() => {
-		// キャンバスの初期化処理
+	// キャンバスの初期化処理
+	useLayoutEffect(() => {
 		const canvas = new fabric.Canvas('fabric', {
 			isDrawingMode: true, // 手書きモード
 			width: 300,
@@ -21,14 +24,42 @@ function App() {
 		setFabricCanvas(canvas)
 	}, [])
 
+	// ブラシサイズの変更
 	useEffect(() => {
 		if (fabricCanvas !== undefined)
 			fabricCanvas.freeDrawingBrush.width = brushwidth
 	}, [fabricCanvas, brushwidth])
 
+	// redo時の処理
+	useEffect(() => {
+		fabricCanvas?.on('object:added', () => {
+			if (!isRedoing) {
+				canvasHistory = []
+			}
+			isRedoing = false
+		})
+	}, [fabricCanvas])
+
+	const undoCanvas = () => {
+		if (fabricCanvas !== undefined && fabricCanvas._objects.length > 0) {
+			const copyArray = [...canvasHistory]
+			copyArray.push(fabricCanvas._objects.pop()!)
+			canvasHistory = copyArray
+			fabricCanvas.renderAll()
+		}
+	}
+
+	const redoCanvas = () => {
+		if (fabricCanvas !== undefined && canvasHistory.length > 0) {
+			isRedoing = true
+			fabricCanvas.add(canvasHistory.pop()!)
+		}
+	}
+
 	const clearCanvas = () => {
 		if (fabricCanvas !== undefined) {
 			fabricCanvas.clear()
+			canvasHistory = []
 			fabricCanvas.setBackgroundImage(backgroundImageUrl, () =>
 				fabricCanvas.renderAll()
 			)
@@ -41,14 +72,30 @@ function App() {
 				<canvas id="fabric" />
 			</div>
 			<Stack spacing={2} sx={{ width: 500, margin: 'auto' }}>
-				<Button
-					variant="contained"
-					onClick={clearCanvas}
-					style={{ width: 'fit-content' }}
-				>
-					クリア
-				</Button>
-				<Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
+				<Stack spacing={2} direction="row" justifyContent="center">
+					<Button
+						variant="contained"
+						onClick={undoCanvas}
+						style={{ width: 'fit-content' }}
+					>
+						undo
+					</Button>
+					<Button
+						variant="contained"
+						onClick={redoCanvas}
+						style={{ width: 'fit-content' }}
+					>
+						redo
+					</Button>
+					<Button
+						variant="contained"
+						onClick={clearCanvas}
+						style={{ width: 'fit-content' }}
+					>
+						clear
+					</Button>
+				</Stack>
+				<Stack spacing={2} direction="row" alignItems="center">
 					<p> BrushWidth: </p>
 					<Slider
 						defaultValue={25}
