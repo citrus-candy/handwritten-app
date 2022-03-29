@@ -2,14 +2,25 @@ import { useEffect, useLayoutEffect, useState } from 'react'
 import './App.css'
 import { fabric } from 'fabric'
 import { Canvas } from 'fabric/fabric-impl'
-import { Container, Button, Stack, Slider } from '@mui/material'
+import {
+	Container,
+	Button,
+	Stack,
+	Slider,
+	ToggleButton,
+	ToggleButtonGroup,
+} from '@mui/material'
+
+const initialBrushWidth = 25
+const initialBrushColor = 'red'
 
 let isRedoing: boolean = false
 let canvasHistory: fabric.Object[] = []
 
 function App() {
-	const [brushwidth, setBrushWidth] = useState<number>(25)
+	const [brushwidth, setBrushWidth] = useState<number>(initialBrushWidth)
 	const [fabricCanvas, setFabricCanvas] = useState<Canvas>()
+	const [selectColor, setSelectColor] = useState(initialBrushColor)
 	const backgroundImageUrl = 'https://placehold.jp/300x300.png'
 
 	// キャンバスの初期化処理
@@ -21,6 +32,7 @@ function App() {
 			// backgroundColor: '#80beaf',
 			backgroundImage: backgroundImageUrl,
 		})
+		canvas.freeDrawingBrush.color = initialBrushColor
 		setFabricCanvas(canvas)
 	}, [])
 
@@ -66,12 +78,31 @@ function App() {
 		}
 	}
 
+	const handleChange = (
+		event: React.MouseEvent<HTMLElement>,
+		selectedColor: string
+	) => {
+		setSelectColor(selectedColor)
+		if (fabricCanvas !== undefined)
+			fabricCanvas.freeDrawingBrush.color = selectedColor
+	}
+
+	const toggleButtons = [
+		'red',
+		'orange',
+		'yellow',
+		'green',
+		'blue',
+		'indigo',
+		'purple',
+	]
+
 	return (
 		<Container>
 			<div style={{ margin: '40px auto' }}>
 				<canvas id="fabric" />
 			</div>
-			<Stack spacing={2} sx={{ width: 500, margin: 'auto' }}>
+			<Stack spacing={2} sx={{ width: 'fit-content', margin: 'auto' }}>
 				<Stack spacing={2} direction="row" justifyContent="center">
 					<Button
 						variant="contained"
@@ -94,6 +125,27 @@ function App() {
 					>
 						clear
 					</Button>
+				</Stack>
+				<Stack spacing={2} direction="row" alignItems="center">
+					<p> BrushColor: </p>
+					<ToggleButtonGroup
+						color="primary"
+						value={selectColor}
+						exclusive
+						onChange={handleChange}
+					>
+						{toggleButtons.map((color) => {
+							return (
+								<ToggleButton
+									key={color}
+									value={color}
+									style={{ color: color }}
+								>
+									{color}
+								</ToggleButton>
+							)
+						})}
+					</ToggleButtonGroup>
 				</Stack>
 				<Stack spacing={2} direction="row" alignItems="center">
 					<p> BrushWidth: </p>
