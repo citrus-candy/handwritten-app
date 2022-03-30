@@ -8,7 +8,8 @@ import BrushColorButtons from './components/BrushColorButtons'
 import BrushWidthSlider from './components/BrushWidthSlider'
 
 const canvasId = 'fabric'
-const backgroundImageUrl = 'https://placehold.jp/300x300.png'
+const canvasSize = 500
+const backgroundImageUrl = `https://placehold.jp/${canvasSize}x${canvasSize}.png`
 const initialBrushColor = 'red'
 const initialBrushWidth = 25
 const minBrushWidth = 1
@@ -21,8 +22,8 @@ function App() {
 	useLayoutEffect(() => {
 		const canvas = new fabric.Canvas(canvasId, {
 			isDrawingMode: true,
-			width: 300,
-			height: 300,
+			width: canvasSize,
+			height: canvasSize,
 			backgroundImage: backgroundImageUrl,
 		})
 		canvas.freeDrawingBrush.color = initialBrushColor
