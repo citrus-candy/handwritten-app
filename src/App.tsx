@@ -16,38 +16,38 @@ const minBrushWidth = 1
 const maxBrushWidth = 50
 
 function App() {
-	const [fabricCanvas, setFabricCanvas] = useState<Canvas>()
+  const [fabricCanvas, setFabricCanvas] = useState<Canvas>()
 
-	// キャンバスの初期化処理
-	useLayoutEffect(() => {
-		const canvas = new fabric.Canvas(canvasId, {
-			isDrawingMode: true,
-			width: canvasSize,
-			height: canvasSize,
-			backgroundImage: backgroundImageUrl,
-		})
-		canvas.freeDrawingBrush.color = initialBrushColor
-		setFabricCanvas(canvas)
-	}, [])
+  // キャンバスの初期化処理
+  useLayoutEffect(() => {
+    const canvas = new fabric.Canvas(canvasId, {
+      isDrawingMode: true,
+      width: canvasSize,
+      height: canvasSize,
+      backgroundImage: backgroundImageUrl,
+    })
+    canvas.freeDrawingBrush.color = initialBrushColor
+    setFabricCanvas(canvas)
+  }, [])
 
-	return (
-		<Container>
-			<FabricCanvas id={canvasId} />
-			<Stack spacing={2} sx={{ width: 'fit-content', margin: 'auto' }}>
-				<StackButtons canvas={fabricCanvas!} bgImageUrl={backgroundImageUrl} />
-				<BrushColorButtons
-					canvas={fabricCanvas!}
-					initialColor={initialBrushColor}
-				/>
-				<BrushWidthSlider
-					canvas={fabricCanvas!}
-					initialWidth={initialBrushWidth}
-					minWidth={minBrushWidth}
-					maxWidth={maxBrushWidth}
-				/>
-			</Stack>
-		</Container>
-	)
+  return (
+    <Container>
+      <FabricCanvas id={canvasId} />
+      <Stack spacing={2} sx={{ width: 'fit-content', margin: 'auto' }}>
+        <StackButtons canvas={fabricCanvas!} bgImageUrl={backgroundImageUrl} />
+        <BrushColorButtons
+          canvas={fabricCanvas!}
+          initialColor={initialBrushColor}
+        />
+        <BrushWidthSlider
+          canvas={fabricCanvas!}
+          initialWidth={initialBrushWidth}
+          minWidth={minBrushWidth}
+          maxWidth={maxBrushWidth}
+        />
+      </Stack>
+    </Container>
+  )
 }
 
 export default App
