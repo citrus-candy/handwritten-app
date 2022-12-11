@@ -9,7 +9,8 @@ import BrushWidthSlider from './components/BrushWidthSlider'
 
 const canvasId = 'fabric'
 const canvasSize = 500
-const backgroundImageUrl = `https://placehold.jp/${canvasSize}x${canvasSize}.png`
+// const backgroundImageUrl = `https://placehold.jp/${canvasSize}x${canvasSize}.png`
+const backgroundImageUrl = ``
 const initialBrushColor = 'red'
 const initialBrushWidth = 25
 const minBrushWidth = 1
@@ -24,7 +25,7 @@ function App() {
       isDrawingMode: true,
       width: canvasSize,
       height: canvasSize,
-      // backgroundImage: backgroundImageUrl,
+      backgroundImage: backgroundImageUrl,
     })
     canvas.freeDrawingBrush.color = initialBrushColor
     setFabricCanvas(canvas)
