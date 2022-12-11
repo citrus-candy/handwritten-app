@@ -24,7 +24,7 @@ function App() {
       isDrawingMode: true,
       width: canvasSize,
       height: canvasSize,
-      backgroundImage: backgroundImageUrl,
+      // backgroundImage: backgroundImageUrl,
     })
     canvas.freeDrawingBrush.color = initialBrushColor
     setFabricCanvas(canvas)
